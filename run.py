@@ -1,22 +1,20 @@
-from utils import load_mnist
-from sklearn.manifold import Isomap
+import os
+from subprocess import Popen
 
+def execute(n_samples, neighbors, dev, structure, filename, solver, components=2, MNIST = False):
+    if MNIST is False:
+        Popen('python basics.py --n_samples {:d} --neighbors {:d} --std_deviation_noise {} --data_structure {} --solver {} --filename {} --n_components {}'.format(n_samples, neighbors, dev, structure, solver, filename, components))
+    elif MNIST is True:
+        pass
 
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.datasets import load_digits
-from sklearn.model_selection import GridSearchCV
-from sklearn.pipeline import Pipeline
-from sklearn.svm import LinearSVC
-from sklearn.decomposition import PCA, NMF
-from sklearn.feature_selection import SelectKBest, chi2
+#swiss rolls
+execute(2000, 20, 0.0, 'swiss_roll', 'swiss_roll_STD0_N20', 'dense')
+execute(2000, 20, 0.4, 'swiss_roll', 'swiss_roll_STD0.4_N20', 'dense')
+execute(2000, 35, 0.0, 'swiss_roll', 'swiss_roll_STD0_N35', 'dense')
 
+# s curve
+execute(2000, 20, 0.0, 's_curve', 's_curve_STD0_N20', 'dense')
+execute(2000, 20, 0.2, 's_curve', 's_curve_STD0.2_N20', 'dense')
+execute(2000, 35, 0.0, 's_curve', 's_curve_STD0_N35', 'dense')
 
-x_train, _, y_train, _ = load_mnist(permutation=True, train_size=100, test_size=100)
-
-model = Isomap(n_components=2)
-proj = model.fit_transform(x_train)
-plt.scatter(proj[:, 0], proj[:, 1], c=y_train, cmap=plt.cm.get_cmap('jet', 10))
-plt.colorbar(ticks=range(10))
-plt.clim(-0.5, 9.5)
 
