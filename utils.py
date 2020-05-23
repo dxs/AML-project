@@ -24,10 +24,22 @@ def load_mnist(permutation = True, train_size = 5000, test_size = 10000):
     return x_train, x_test, y_train, y_test
 
 def load_swiss_roll(n_points = 2000, deviation = 0.1):
-    x, color = make_swiss_roll(n_samples = n_points, noise = deviation)
+    x, color = make_swiss_roll(n_samples=n_points, noise=deviation)
     return x, color
 
 def load_s_curve(n_points = 2000, deviation = 0.1):
-    x, color = make_s_curve(n_samples = n_points, noise = deviation)
+    x, color = make_s_curve(n_samples=n_points, noise=deviation)
     return x, color
 
+
+def load_data(d_type, n_samples = 2000, dev = 0):
+    # Load data
+    if d_type == 's_curve':
+        print('* Load S Curve')
+        x, color = load_s_curve(n_samples, dev)
+    elif d_type == 'swiss_roll':
+        print('* Load Swiss Roll')
+        x, color = load_swiss_roll(n_samples, dev)
+    else: 
+        raise NotImplementedError
+    return x, color
