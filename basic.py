@@ -5,11 +5,11 @@ from sklearn import manifold
 import time
 import argparse
 
-parser = argparse.ArgumentParser(description='Swiss Roll example')
+parser = argparse.ArgumentParser(description='Advanced analysis of MLLE and HLLE')
 
 parser.add_argument('--n_samples',
-                    type = int, default = 2000,
-                    help = 'Number of samples used to create the structure')
+                    type = int, default = 5000,
+                    help = 'Number of samples used to train')
 
 parser.add_argument('--neighbors',
                     type = int, default = 12,
@@ -19,12 +19,8 @@ parser.add_argument('--n_components',
                     type = int, default = 2,
                     help = 'Number of component used to reduce')
 
-parser.add_argument('--std_deviation_noise',
-                    type = float, default = 0.1,
-                    help = 'Standard Deviation of noise for swiss roll generation')
-
 parser.add_argument('--data_structure',
-                    type = str, default = 'swiss_roll',
+                    type = str, default = 'mnist-fashion',
                     help = 'can be swiss_roll, s_curve, mnist')
 
 parser.add_argument('--filename',
