@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "advanced",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/advanced.py",
+            "console": "integratedTerminal"
+        },
+        {
             "name": "Run.py basics",
             "type": "python",
             "request": "launch",
