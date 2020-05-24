@@ -34,7 +34,7 @@ def create_labels():
             '8' : 'Bag',
             '9' : 'Ankle boot',
         }
-    elif p.data_structure == 'mnist_digit':
+    elif p.data_structure == 'mnist_digit' or p.data_structure == 'mnist_digit_sk':
         LABELS = {
             '0' : '0',
             '1' : '1',
@@ -248,7 +248,7 @@ if __name__ == "__main__":
 
     parser.add_argument('--data_structure',
                         type = str, default = 'mnist_fashion',
-                        help = 'can be mnist_fashion or mnist_digit')
+                        help = 'can be mnist_fashion or mnist_digit or mnist_digit_sk')
 
     parser.add_argument('--filename',
                         type = str, default='none',

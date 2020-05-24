@@ -5,9 +5,14 @@ import os
 from sklearn.datasets import fetch_openml
 from sklearn.datasets import make_swiss_roll
 from sklearn.datasets import make_s_curve
+from sklearn.datasets import load_digits
 import numpy as np
 from sklearn.utils import check_random_state
 
+
+def load_mnist_sk(n_class=10):
+    X, y = load_digits(n_class=n_class, return_X_y=True)
+    return X, y
 
 def load_mnist(permutation=True, n_class=10):
     """
@@ -99,6 +104,10 @@ def load_data(d_type, n_samples = 2000, dev = 0, n_class=10):
     elif d_type == 'mnist_digit':
         print('* Load MNIST Digit')
         x, label = load_mnist(True, n_class)
+        return x, label
+    elif d_type == 'mnist_digit_sk':
+        print('* Load MNIST Digit SKLEARN')
+        x, label = load_mnist_sk(n_class)
         return x, label
     else: 
         raise NotImplementedError
