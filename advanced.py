@@ -66,7 +66,8 @@ def reduce_data(x_train, x_test):
         n_neighbors=p.neighbors,
         n_components=p.components,
         method='modified',
-        eigen_solver=p.solver
+        eigen_solver=p.solver,
+        n_jobs=-1
         )
     tic = time.time()
     x_mlle = model_m.fit_transform(x)
@@ -78,7 +79,8 @@ def reduce_data(x_train, x_test):
         n_neighbors=p.neighbors,
         n_components=p.components,
         method='hessian',
-        eigen_solver=p.solver
+        eigen_solver=p.solver,
+        n_jobs=-1
         )
     tic = time.time()
     x_hlle = model_h.fit_transform(x)
@@ -93,30 +95,33 @@ def reduce_data(x_train, x_test):
 
     return x_m_train, x_m_test, x_h_train, x_h_test
 
-def knn(x_train, y_train, x_test, y_test, *plot):
+def knn(x_train, y_train, x_test, y_test,):
     """
-    *plot parameter contains all the parameters to plot
-    Structure of *plot : (name, )
     """
-    list_n = [4, 5, 6]
-    for n in list_n:
+    acc = []
+    for n in range(1, 30):
         classifier = KNeighborsClassifier(n_neighbors=n)
         classifier.fit(x_train, y_train.ravel())
         acc_knn = classifier.score(x_test, y_test.ravel())
+        acc.append(acc_knn)
         print('KNN {} acc : {:.02f}'.format(n, acc_knn))
 
-def plot_reduction(x_m, x_h, y_m, y_h, *params):
+    return acc
+
+def plot_reduction(x_m, x_h, y_m, y_h, knn_m, knn_h, *params):
     """
     plot the data after reduction of dimensionality
     """
-    fig = plt.figure(figsize=(14, 7))
+    y_m = y_m.ravel()
+    y_h = y_h.ravel()
+    fig = plt.figure(figsize=(15, 5))
 
     fig.suptitle('MNIST_Fashion dimentionality reduction')
-    ax = fig.add_subplot(121)
+    ax = fig.add_subplot(131)
 
     #iterate for each label
     for val, label in LABELS.items():
-        idx = np.argwhere(y_m == val)
+        idx = np.argwhere(y_m == int(val))
         ax.scatter(x_m[idx, 0], x_m[idx, 1], label=label)
     #plt.axis('tight')
     plt.xlabel('Projection 1')
@@ -124,10 +129,10 @@ def plot_reduction(x_m, x_h, y_m, y_h, *params):
     plt.title('[MLLE]')
     plt.legend()
 
-    ax = fig.add_subplot(122)
+    ax = fig.add_subplot(132)
     #iterate for each label
     for val, label in LABELS.items():
-        idx = np.argwhere(y_h == val)
+        idx = np.argwhere(y_h == int(val))
         ax.scatter(x_h[idx, 0], x_h[idx, 1], label=label)
 
     #plt.axis('tight')
@@ -135,8 +140,21 @@ def plot_reduction(x_m, x_h, y_m, y_h, *params):
     plt.ylabel('Projection 2')
     plt.title('[HLLE]')
     plt.legend()
-    plt.savefig('Results/n{}_c{}.png'.format(p.neighbors, p.n_class))
-    plt.show(block=False)
+
+    ax = fig.add_subplot(133)
+    t = range(1, 30)
+    plt.plot(t, knn_m, label='MLLE')
+    plt.plot(t, knn_h, label='HLLE')
+
+    plt.xlim(1, 30)
+    plt.ylim(0, 1)
+    plt.xlabel('Neighbors')
+    plt.ylabel('Accuracy')
+    plt.title('[HLLE] and [MLLE] KNN')
+    plt.legend()
+
+    plt.savefig('Results/data_{}n{}_c{}.png'.format(p.data_structure, p.neighbors, p.n_class))
+    plt.show(block=True)
 
 
 def main():
@@ -177,16 +195,14 @@ def main():
     y_h_test = y_raw_test
 
     # Plot reduction what is does looks like
-    plot_reduction(x_m_train, x_h_train, y_m_train, y_h_train, None)
-
 
     #KNN to [MLLE]
-    plot = ('MLLE')
-    knn(x_m_train, y_m_train, x_m_test, y_m_test, plot)
+    acc_m = knn(x_m_train, y_m_train, x_m_test, y_m_test)
 
     #KNN to [HLLE]
-    plot = ('HLLE')
-    knn(x_h_train, y_h_train, x_h_test, y_h_test, plot)
+    acc_h = knn(x_h_train, y_h_train, x_h_test, y_h_test)
+
+    plot_reduction(x_m_train, x_h_train, y_m_train, y_h_train, acc_m, acc_h, None)
 
 
     
@@ -211,11 +227,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Advanced analysis of MLLE and HLLE')
 
     parser.add_argument('--n_train',
-                        type = int, default = 1000,
+                        type = int, default = 500,
                         help = 'Number of samples used to train the structure')
 
     parser.add_argument('--n_test',
-                        type = int, default = 50,
+                        type = int, default = 1000,
                         help = 'Number of samples used to test the structure')
 
     parser.add_argument('--neighbors',
