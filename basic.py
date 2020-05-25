@@ -27,6 +27,10 @@ parser.add_argument('--filename',
                     type = str, default='none',
                     help='filename to save under Results')
 
+parser.add_argument('--std_deviation_noise',
+                    type = float, default=0.0,
+                    help='Standard deviation from ideal shape')
+
 parser.add_argument('--solver',
                     type = str, default = 'auto',
                     help = 'Solver used for the manifold reduction, it can be [auto, dense, arpack], arpack and auto can be unstable but are faster')

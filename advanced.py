@@ -122,7 +122,8 @@ def plot_reduction(x_m, x_h, y_m, y_h, knn_m, knn_h, *params):
     #iterate for each label
     for val, label in LABELS.items():
         idx = np.argwhere(y_m == int(val))
-        ax.scatter(x_m[idx, 0], x_m[idx, 1], label=label)
+        if len(idx) > 0:
+            ax.scatter(x_m[idx, 0], x_m[idx, 1], label=label)
     #plt.axis('tight')
     plt.xlabel('Projection 1')
     plt.ylabel('Projection 2')
@@ -133,7 +134,8 @@ def plot_reduction(x_m, x_h, y_m, y_h, knn_m, knn_h, *params):
     #iterate for each label
     for val, label in LABELS.items():
         idx = np.argwhere(y_h == int(val))
-        ax.scatter(x_h[idx, 0], x_h[idx, 1], label=label)
+        if len(idx) > 0:
+            ax.scatter(x_h[idx, 0], x_h[idx, 1], label=label)
 
     #plt.axis('tight')
     plt.xlabel('Projection 1')

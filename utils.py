@@ -84,6 +84,15 @@ def load_s_curve(n_points = 2000, deviation = 0.1):
     x, color = make_s_curve(n_samples=n_points, noise=deviation)
     return x, color
 
+def load_s_curve_hole(n_points=2000, deviation = 0.1):
+    """
+    Load a s curve dataset but with a hole in the middle
+    """
+    x, color = make_s_curve(n_samples=n_points, noise=deviation)
+
+
+
+    return x, color
 
 def load_data(d_type, n_samples = 2000, dev = 0, n_class=10):
     """
